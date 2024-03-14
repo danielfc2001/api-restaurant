@@ -1,21 +1,23 @@
-import express, { Application, Request, Response } from "express"
-import AuthRoutes from "./routes/Auth.routes"
-import mongoDBConnection from "./models/mongoDB"
+import express, { Application, Request, Response } from "express";
+import cors from "cors";
+import AuthRoutes from "./routes/Auth.routes";
+import mongoDBConnection from "./models/mongoDB";
 
-const app: Application = express()
+const app: Application = express();
 
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
-mongoDBConnection().catch(error => console.log(error))
+mongoDBConnection().catch((error) => console.log(error));
 
 app.get("/", (_req: Request, res: Response) => {
-    res.send("Hello world")
-})
+  res.send("Hello world");
+});
 
-app.use("/auth", AuthRoutes)
+app.use("/auth", AuthRoutes);
 
 app.listen(PORT, () => {
-    console.log("Server on port: %s", PORT)
-})
+  console.log("Server on port: %s", PORT);
+});

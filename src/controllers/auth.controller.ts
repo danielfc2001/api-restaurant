@@ -53,12 +53,14 @@ export class AuthController {
     try {
       if (!username || !email || !password || !role)
         throw {
+          status: 400,
           message: "All fields must be required.",
         };
       const hashedPassword = await bcrypt.hash(password, 10);
 
       if (!hashedPassword)
         throw {
+          status: 500,
           message: "An error was ocurred creating a hashed password.",
         };
       const user = new userModel({
@@ -68,6 +70,7 @@ export class AuthController {
         role,
         id: randomUUID().toString(),
       });
+      /* const validated = await user.validate(["email", "username"]); */
       const newUser = await user.save();
 
       if (!newUser)
@@ -84,7 +87,7 @@ export class AuthController {
       });
     } catch (err: any) {
       console.log(err);
-      res.status(500).send({ message: err.message });
+      res.status(err.status ?? 500).send({ message: err.message });
     }
   }
 }
